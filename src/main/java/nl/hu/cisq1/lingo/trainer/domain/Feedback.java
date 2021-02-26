@@ -2,6 +2,7 @@ package nl.hu.cisq1.lingo.trainer.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
 
 import java.util.List;
 
@@ -13,8 +14,12 @@ public class Feedback {
     private List<Mark> marks;
 
     public Feedback(String attempt, List<Mark> marks) {
-        this.attempt = attempt;
-        this.marks = marks;
+        if (marks.size() == attempt.length()) {
+            this.attempt = attempt;
+            this.marks = marks;
+        } else {
+            throw new InvalidFeedbackException();
+        }
     }
 
     public boolean wordIsGuessed() {

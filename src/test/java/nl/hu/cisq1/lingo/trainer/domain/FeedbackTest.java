@@ -1,5 +1,6 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
+import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ class FeedbackTest {
     @Test
     @DisplayName("The word is not guessed when not all letters are correct")
     void wordIsNotGuessed() {
-        Mark[] marks = {Mark.PRESENT, Mark.ABSENT, Mark.CORRECT, Mark.CORRECT};
+        Mark[] marks = {Mark.PRESENT, Mark.ABSENT, Mark.CORRECT, Mark.CORRECT, Mark.ABSENT};
         Feedback fb = new Feedback("woord", Arrays.asList(marks));
         assertTrue(fb.wordIsNotGuessed());
     }
@@ -31,6 +32,8 @@ class FeedbackTest {
         Mark[] marks = {Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID};
         Feedback fb = new Feedback("woord", Arrays.asList(marks));
         assertTrue(fb.wordIsInvalid());
+        Mark[] marks2 = {Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID};
+        assertThrows(InvalidFeedbackException.class, () -> new Feedback("woord", Arrays.asList(marks2)));
     }
 
     @Test

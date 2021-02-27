@@ -1,5 +1,7 @@
 package nl.hu.cisq1.lingo.words.domain;
 
+import lombok.ToString;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,5 +25,10 @@ public class Word {
 
     public Integer getLength() {
         return length;
+    }
+
+    @Override
+    public String toString() {
+        return this.getValue();
     }
 }

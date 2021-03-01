@@ -1,39 +1,46 @@
-package nl.hu.cisq1.lingo.trainer.domain;
+package nl.hu.cisq1.lingo.domain;
 
-import nl.hu.cisq1.lingo.trainer.domain.exception.InvalidFeedbackException;
-import nl.hu.cisq1.lingo.words.domain.Word;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+import nl.hu.cisq1.lingo.domain.exception.AttemptLimitReachedException;
+import nl.hu.cisq1.lingo.domain.exception.InvalidFeedbackException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+@EqualsAndHashCode
+@ToString
+@Getter
 public class Round {
 
-    private int number;
+    private final int number;
     private Word word;
     private List<Feedback> feedbackList;
+    private int attempts;
 
     public Round(int number, Word word) {
         this.number = number;
         this.word = word;
         this.feedbackList = new ArrayList<>();
+        this.attempts = 0;
     }
 
-    public List<Feedback> getFeedbackList() {
-        return feedbackList;
-    }
-
-    public List<Feedback> startRound() {
+    public void startRound() {
         Feedback fb = new Feedback(this.word.getValue());
         this.feedbackList.add(fb);
-        return this.feedbackList;
     }
 
     public void guessWord(Word guess) {
+        if (attempts == 5) {
+            throw new AttemptLimitReachedException();
+        }
+
         if (guess.getLength().equals(this.word.getLength())) {
             List<Mark> marks = this.generateMarks(guess);
             Feedback fb = new Feedback(guess.getValue(), marks);
             this.feedbackList.add(fb);
+            this.attempts++;
         } else {
             throw new InvalidFeedbackException();
         }

@@ -61,8 +61,7 @@ class FeedbackTest {
     static Stream<Arguments> provideHintExamples() {
         return Stream.of(
                 Arguments.of("woord", Arrays.asList(Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.CORRECT), Arrays.asList('w', 'o', 'o', 'r', 'd')),
-                Arguments.of("woord", Arrays.asList(Mark.PRESENT, Mark.CORRECT, Mark.ABSENT, Mark.PRESENT, Mark.ABSENT), Arrays.asList('+', 'o', '-', '+', '-')),
-                Arguments.of("woord", Arrays.asList(Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID), Arrays.asList('*', '*', '*', '*', '*'))
+                Arguments.of("woord", Arrays.asList(Mark.PRESENT, Mark.CORRECT, Mark.ABSENT, Mark.PRESENT, Mark.ABSENT), Arrays.asList('+', 'o', '-', '+', '-'))
         );
     }
 }

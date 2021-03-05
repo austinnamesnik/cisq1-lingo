@@ -46,9 +46,6 @@ public class Feedback {
             int index = 0;
             for (Mark m : this.marks) {
                 switch (m) {
-                    case INVALID:
-                        hint.add('*');
-                        break;
                     case ABSENT:
                         hint.add('-');
                         break;
@@ -57,7 +54,6 @@ public class Feedback {
                         break;
                     case CORRECT:
                         hint.add(this.attempt.charAt(index));
-                        break;
                 }
                 index++;
             }

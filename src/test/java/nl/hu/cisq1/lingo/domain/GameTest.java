@@ -1,5 +1,7 @@
 package nl.hu.cisq1.lingo.domain;
 
+import nl.hu.cisq1.lingo.domain.exception.AttemptLimitReachedException;
+import nl.hu.cisq1.lingo.domain.exception.InvalidRoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,6 +33,27 @@ class GameTest {
                 Arguments.of("doei", 4, 10),
                 Arguments.of("maple", 5, 5)
         );
+    }
+
+    @Test
+    @DisplayName("Exception is thrown when the round does not belong to the game")
+    void invalidRoundException() {
+        assertThrows(InvalidRoundException.class, () -> {
+            Round round = new Round(1, new Word("hallo"));
+            Game game = new Game(1L);
+            game.addScore(round, 4);
+        });
+    }
+
+    @Test
+    @DisplayName("Exception is thrown when the round has too many attempt")
+    void tooManyAttempts() {
+        assertThrows(AttemptLimitReachedException.class, () -> {
+            Game game = new Game(1L);
+            game.startNextRound(new Word("hallo"));
+            Round round = game.getRounds().get(0);
+            game.addScore(round, 6);
+        });
     }
 
     @Test

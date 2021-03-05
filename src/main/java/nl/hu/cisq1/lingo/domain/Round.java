@@ -2,6 +2,7 @@ package nl.hu.cisq1.lingo.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import nl.hu.cisq1.lingo.domain.exception.AttemptLimitReachedException;
 import nl.hu.cisq1.lingo.domain.exception.InvalidFeedbackException;
@@ -12,6 +13,7 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 @Getter
+@Setter
 public class Round {
 
     private final int number;

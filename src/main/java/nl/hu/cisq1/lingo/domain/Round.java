@@ -7,7 +7,8 @@ import nl.hu.cisq1.lingo.domain.exception.WordIsGuessedException;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode
 @ToString
@@ -83,9 +84,9 @@ public class Round implements Serializable {
         List<Integer> directMatch = new ArrayList<>(guess.getLength());
         List<Character> remainingCharacters = new ArrayList<>();
         for (int i = 0; i < guess.getLength(); i++) {
-            Character guess_c = guess.getValue().charAt(i);
-            Character word_c = this.word.getValue().charAt(i);
-            if (guess_c.equals(word_c)) {
+            Character guessChar = guess.getValue().charAt(i);
+            Character wordChar = this.word.getValue().charAt(i);
+            if (guessChar.equals(wordChar)) {
                 directMatch.add(1);
             } else {
                 directMatch.add(0);

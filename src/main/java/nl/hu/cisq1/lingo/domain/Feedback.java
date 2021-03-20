@@ -33,7 +33,7 @@ public class Feedback implements Serializable {
     private List<Mark> marks;
 
     public Feedback(String attempt, List<Mark> marks) {
-        if (marks.size() != attempt.length() && marks.size() != 0) {
+        if (marks.size() != attempt.length() && !marks.isEmpty()) {
             throw new InvalidFeedbackException();
         }
 
@@ -62,6 +62,8 @@ public class Feedback implements Serializable {
                     break;
                 case CORRECT:
                     hint.add(this.attempt.charAt(index));
+                case INVALID:
+                    hint.add('*');
             }
             index++;
         }

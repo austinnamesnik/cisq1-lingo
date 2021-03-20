@@ -11,9 +11,9 @@ import java.util.List;
 @ToString
 public class Hint {
 
-    private List<Character> hint;
+    private List<Character> characters;
 
     public Hint(List<Character> characterList) {
-        this.hint = characterList;
+        this.characters = characterList;
     }
 }

@@ -1,7 +1,6 @@
 package nl.hu.cisq1.lingo.presentation;
 
 import nl.hu.cisq1.lingo.application.GameService;
-import nl.hu.cisq1.lingo.application.WordService;
 import nl.hu.cisq1.lingo.domain.Game;
 import nl.hu.cisq1.lingo.presentation.dto.CreationDTO;
 import nl.hu.cisq1.lingo.presentation.dto.GameDTO;
@@ -14,11 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public class GameController {
 
     private GameService gameService;
-    private WordService wordService;
 
-    public GameController(GameService gameService, WordService wordService) {
+    public GameController(GameService gameService) {
         this.gameService = gameService;
-        this.wordService = wordService;
     }
 
     @PostMapping("/create")
@@ -33,9 +30,9 @@ public class GameController {
     }
 
     @PostMapping("/guess/{game_id}")
-    public GameDTO guessWord(@PathVariable("game_id") Long game_id, @Validated @RequestBody GuessDTO guess) {
-        Game game = this.gameService.findById(game_id);
-        return this.gameService.makeGuess(game, guess.attempt);
+    public GameDTO guessWord(@PathVariable("game_id") Long gameId, @Validated @RequestBody GuessDTO guess) {
+        Game game = this.gameService.findById(gameId);
+        return this.gameService.makeGuess(game, guess.getAttempt());
     }
 
     @GetMapping("/get/{id}")

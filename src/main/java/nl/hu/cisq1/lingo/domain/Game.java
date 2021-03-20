@@ -40,7 +40,7 @@ public class Game implements Serializable {
     }
 
     public Round getLastRound() {
-        if (this.rounds.size() > 0) {
+        if (!this.rounds.isEmpty()) {
             return this.rounds.get(this.rounds.size()-1);
         }
         return null;

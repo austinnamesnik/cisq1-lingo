@@ -12,7 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RoundTest {
 
@@ -22,7 +23,7 @@ class RoundTest {
     void makeGuess(Word toGuess, Word guess, List<Character> chars) {
         Round r = new Round(1, toGuess);
         r.guessWord(guess);
-        assertEquals(r.getFeedbackList().get(0).giveHint().getHint(), chars);
+        assertEquals(r.getFeedbackList().get(0).giveHint().getCharacters(), chars);
     }
 
     static Stream<Arguments> provideGuessExamples() {
@@ -36,20 +37,23 @@ class RoundTest {
     @Test
     @DisplayName("When 5 guesses have been made, guessing is not allowed")
     void makeGuessToMuch() {
-        assertThrows(AttemptLimitReachedException.class, () -> {
-            Round r = new Round(1, new Word("tester"));
-            r.setAttempts(5);
-            r.guessWord(new Word("hihi"));
-        });
+        assertThrows(AttemptLimitReachedException.class, this::tester1);
+    }
+
+    void tester1() {
+        Round r = new Round(1, new Word("tester"));
+        r.setAttempts(5);
+        r.guessWord(new Word("hihi"));
     }
 
     @Test
     @DisplayName("When the guessed word's length is not the same as the word to guess, an exception is thrown")
     void guessWithIncorrectLength() {
-        assertThrows(InvalidFeedbackException.class, () -> {
-            Round r = new Round(1, new Word("hidden"));
-            r.guessWord(new Word("hid"));
-        });
+        assertThrows(InvalidFeedbackException.class, this::tester2);
     }
 
+    void tester2() {
+        Round r = new Round(1, new Word("hidden"));
+        r.guessWord(new Word("hid"));
+    }
 }

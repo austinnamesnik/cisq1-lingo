@@ -11,14 +11,14 @@ public interface GameMapper {
     @Mapping(target = "number", expression = "java(game.getLastRound().getNumber())")
     @Mapping(target = "attempts", expression = "java(game.getLastRound().getAttempts())")
     @Mapping(target = "feedbacks", expression = "java(game.getLastRound().getFeedbackList())")
-    @Mapping(target = "hint", expression = "java(game.getLastRound().startRound().getHint())")
+    @Mapping(target = "hint", expression = "java(game.getLastRound().startRound().getCharacters())")
     GameDTO toGameDTOstart(Game game);
 
     @Mapping(target = "game_id", source = "id")
     @Mapping(target = "number", expression = "java(game.getLastRound().getNumber())")
     @Mapping(target = "attempts", expression = "java(game.getLastRound().getAttempts())")
     @Mapping(target = "feedbacks", expression = "java(game.getLastRound().getFeedbackList())")
-    @Mapping(target = "hint", expression = "java(game.getLastRound().getFeedbackList().get(game.getLastRound().getFeedbackList().size() - 1).giveHint().getHint())")
+    @Mapping(target = "hint", expression = "java(game.getLastRound().getFeedbackList().get(game.getLastRound().getFeedbackList().size() - 1).giveHint().getCharacters())")
     GameDTO toGameDTOguess(Game game);
 
     CreationDTO toCreationDTO(Game game);

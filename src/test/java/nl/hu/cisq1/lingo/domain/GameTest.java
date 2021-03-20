@@ -10,7 +10,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GameTest {
 
@@ -38,22 +39,26 @@ class GameTest {
     @Test
     @DisplayName("Exception is thrown when the round does not belong to the game")
     void invalidRoundException() {
-        assertThrows(InvalidRoundException.class, () -> {
-            Round round = new Round(1, new Word("hallo"));
-            Game game = new Game();
-            game.addScore(round, 4);
-        });
+        assertThrows(InvalidRoundException.class, this::tester1);
+    }
+
+    void tester1() {
+        Round round = new Round(1, new Word("hallo"));
+        Game game = new Game();
+        game.addScore(round, 4);
     }
 
     @Test
     @DisplayName("Exception is thrown when the round has too many attempt")
     void tooManyAttempts() {
-        assertThrows(AttemptLimitReachedException.class, () -> {
-            Game game = new Game();
-            game.startNextRound(new Word("hallo"));
-            Round round = game.getRounds().get(0);
-            game.addScore(round, 6);
-        });
+        assertThrows(AttemptLimitReachedException.class, this::tester2);
+    }
+
+    void tester2() {
+        Game game = new Game();
+        game.startNextRound(new Word("hallo"));
+        Round round = game.getRounds().get(0);
+        game.addScore(round, 6);
     }
 
     @Test

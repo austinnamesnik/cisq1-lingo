@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -46,7 +47,8 @@ class FeedbackTest {
     @Test
     @DisplayName("Exception is thrown when the amount of marks is not equal to the length of the word")
     void invalidFeedback() {
-        assertThrows(InvalidFeedbackException.class, () -> new Feedback("woord", Arrays.asList(Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID)));
+        List<Mark> marks = Arrays.asList(Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID);
+        assertThrows(InvalidFeedbackException.class, () -> new Feedback("woord", marks));
     }
 
     @ParameterizedTest(name = "#{index} - Test with values: {0}, {1}")
@@ -54,7 +56,7 @@ class FeedbackTest {
     @MethodSource("provideHintExamples")
     void giveHint(String word, List<Mark> marks, List<Character> output) {
         Feedback fb = new Feedback(word, marks);
-        assertEquals(fb.giveHint().getHint(), output);
+        assertEquals(fb.giveHint().getCharacters(), output);
     }
 
 

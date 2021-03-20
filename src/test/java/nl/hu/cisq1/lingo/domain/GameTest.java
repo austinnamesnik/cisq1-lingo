@@ -18,7 +18,7 @@ class GameTest {
     @DisplayName("Score is added when the round is finished")
     @MethodSource("provideRoundExamples")
     void addScore(String word, int attempts, int score) {
-        Game game = new Game(1L);
+        Game game = new Game();
         game.startNextRound(new Word(word));
         Round round = game.getRounds().get(game.getRounds().size()-1);
         game.addScore(round, attempts);
@@ -40,7 +40,7 @@ class GameTest {
     void invalidRoundException() {
         assertThrows(InvalidRoundException.class, () -> {
             Round round = new Round(1, new Word("hallo"));
-            Game game = new Game(1L);
+            Game game = new Game();
             game.addScore(round, 4);
         });
     }
@@ -49,7 +49,7 @@ class GameTest {
     @DisplayName("Exception is thrown when the round has too many attempt")
     void tooManyAttempts() {
         assertThrows(AttemptLimitReachedException.class, () -> {
-            Game game = new Game(1L);
+            Game game = new Game();
             game.startNextRound(new Word("hallo"));
             Round round = game.getRounds().get(0);
             game.addScore(round, 6);
@@ -59,7 +59,7 @@ class GameTest {
     @Test
     @DisplayName("The next round is start when a word is given")
     void startNextRound() {
-        Game game = new Game(1L);
+        Game game = new Game();
         game.startNextRound(new Word("word"));
         assertEquals(1, game.getRounds().size());
     }

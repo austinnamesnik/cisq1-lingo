@@ -54,7 +54,7 @@ class FeedbackTest {
     @MethodSource("provideHintExamples")
     void giveHint(String word, List<Mark> marks, List<Character> output) {
         Feedback fb = new Feedback(word, marks);
-        assertEquals(fb.giveHint(), output);
+        assertEquals(fb.giveHint().getHint(), output);
     }
 
 

@@ -1,32 +1,35 @@
 package nl.hu.cisq1.lingo.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import nl.hu.cisq1.lingo.domain.exception.AttemptLimitReachedException;
 import nl.hu.cisq1.lingo.domain.exception.InvalidRoundException;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode
 @ToString
+@NoArgsConstructor
 @Getter
-public class Game {
-
+@Setter
+@Entity
+public class Game implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private final Long id;
-    private int score;
-    private List<Round> rounds;
+    @Column(name = "game_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "score")
+    private int score = 0;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "game_id")
+    private List<Round> rounds = new ArrayList<>();
 
     public Game(Long id) {
         this.id = id;
-        this.score = 0;
-        this.rounds = new ArrayList<>();
     }
 
     public void startNextRound(Word word) {
@@ -34,6 +37,13 @@ public class Game {
         Round round = new Round(roundNumber, word);
         round.startRound();
         this.rounds.add(round);
+    }
+
+    public Round getLastRound() {
+        if (this.rounds.size() > 0) {
+            return this.rounds.get(this.rounds.size()-1);
+        }
+        return null;
     }
 
     public void addScore(Round round, int attempts) {
@@ -46,5 +56,12 @@ public class Game {
         }
 
         this.score += 5 * (5 - attempts) + 5;
+    }
+
+    public void makeGuess(String attempt) {
+        this.getLastRound().guessWord(new Word(attempt));
+        if (this.getLastRound().wordIsGuessed()) {
+            this.addScore(this.getLastRound(), this.getLastRound().getAttempts());
+        }
     }
 }

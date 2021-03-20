@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 public class GameDTO {
 
-    private Long game_id;
+    private Long gameId;
     private int number;
     private int attempts;
     private List<Feedback> feedbacks;

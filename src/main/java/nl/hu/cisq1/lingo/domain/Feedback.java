@@ -62,6 +62,7 @@ public class Feedback implements Serializable {
                     break;
                 case CORRECT:
                     hint.add(this.attempt.charAt(index));
+                    break;
                 case INVALID:
                     hint.add('*');
             }

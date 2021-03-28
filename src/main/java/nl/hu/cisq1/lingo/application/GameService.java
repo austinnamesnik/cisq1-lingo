@@ -17,7 +17,7 @@ import javax.transaction.Transactional;
 public class GameService {
     private final SpringGameRepository gameRepository;
 
-    private GameMapper gameMapper = Mappers.getMapper(GameMapper.class);
+    private final GameMapper gameMapper = Mappers.getMapper(GameMapper.class);
 
     public GameService(SpringGameRepository gameRepository) {
         this.gameRepository = gameRepository;

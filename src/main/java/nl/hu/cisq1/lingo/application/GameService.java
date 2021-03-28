@@ -8,7 +8,6 @@ import nl.hu.cisq1.lingo.presentation.dto.CreationDTO;
 import nl.hu.cisq1.lingo.presentation.dto.GameDTO;
 import nl.hu.cisq1.lingo.presentation.dto.GameMapper;
 import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

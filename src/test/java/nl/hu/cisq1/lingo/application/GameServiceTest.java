@@ -13,10 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -71,8 +68,8 @@ class GameServiceTest {
         GameDTO dto = gs.startNextRound(game, word);
 
         assertEquals(dto.getGameId(), game.getId());
-        assertEquals(game.getLastRound().getWord().getValue(), word);
-        assertEquals(game.getRounds().size(), 1);
+        assertEquals(word, game.getLastRound().getWord().getValue());
+        assertEquals(1, game.getRounds().size());
     }
 
     @ParameterizedTest
@@ -86,9 +83,9 @@ class GameServiceTest {
         gs.startNextRound(game, word);
         GameDTO dto = gs.makeGuess(game, attempt);
 
-        assertEquals(dto.getAttempts(), 1);
+        assertEquals(1, dto.getAttempts());
         assertNotNull(dto.getFeedbacks());
-        assertEquals(dto.getFeedbacks().size(), 1);
+        assertEquals(1, dto.getFeedbacks().size());
     }
 
     static Stream<Arguments> provideWords() {

@@ -2,6 +2,7 @@ package nl.hu.cisq1.lingo.domain;
 
 import nl.hu.cisq1.lingo.domain.exception.AttemptLimitReachedException;
 import nl.hu.cisq1.lingo.domain.exception.InvalidFeedbackException;
+import nl.hu.cisq1.lingo.domain.exception.WordIsGuessedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -55,5 +56,17 @@ class RoundTest {
     void tester2() {
         Round r = new Round(1, new Word("hidden"));
         r.guessWord(new Word("hid"));
+    }
+
+    @Test
+    @DisplayName("When the game is finished, you can not make another guess")
+    void makeGuessWhenFinished() {
+        assertThrows(WordIsGuessedException.class, this::tester3);
+    }
+
+    void tester3() {
+        Round round = new Round(1, new Word("hallo"));
+        round.guessWord(new Word("hallo"));
+        round.guessWord(new Word("hoiii"));
     }
 }

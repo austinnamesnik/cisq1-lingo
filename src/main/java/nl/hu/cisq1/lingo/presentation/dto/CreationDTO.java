@@ -10,5 +10,5 @@ import lombok.Setter;
 public class CreationDTO {
 
     private Long id;
-    private static int score;
+    private int score;
 }

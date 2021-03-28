@@ -1,6 +1,7 @@
 package nl.hu.cisq1.lingo.presentation;
 
 import nl.hu.cisq1.lingo.application.GameService;
+import nl.hu.cisq1.lingo.application.WordService;
 import nl.hu.cisq1.lingo.domain.Game;
 import nl.hu.cisq1.lingo.presentation.dto.CreationDTO;
 import nl.hu.cisq1.lingo.presentation.dto.GameDTO;
@@ -14,8 +15,11 @@ public class GameController {
 
     private GameService gameService;
 
-    public GameController(GameService gameService) {
+    private WordService wordService;
+
+    public GameController(GameService gameService, WordService wordService) {
         this.gameService = gameService;
+        this.wordService = wordService;
     }
 
     @PostMapping("/create")
@@ -26,7 +30,8 @@ public class GameController {
     @PostMapping("/next/{id}")
     public GameDTO startNextRound(@PathVariable("id") Long id) {
         Game game = this.gameService.findById(id);
-        return this.gameService.startNextRound(game);
+        int letterLength = game.getRounds().size() % 3 + 5;
+        return this.gameService.startNextRound(game, wordService.provideRandomWord(letterLength));
     }
 
     @PostMapping("/guess/{game_id}")

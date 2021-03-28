@@ -2,7 +2,6 @@ package nl.hu.cisq1.lingo.domain;
 
 import lombok.*;
 import nl.hu.cisq1.lingo.domain.exception.AttemptLimitReachedException;
-import nl.hu.cisq1.lingo.domain.exception.InvalidRoundException;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -46,22 +45,11 @@ public class Game implements Serializable {
         return null;
     }
 
-    public void addScore(Round round, int attempts) {
-        if (!this.rounds.contains(round)) {
-            throw new InvalidRoundException();
-        }
-
-        if (attempts > 5) {
+    public void addScore() {
+        if (this.getLastRound().getAttempts() > 5) {
             throw new AttemptLimitReachedException();
         }
 
-        this.score += 5 * (5 - attempts) + 5;
-    }
-
-    public void makeGuess(String attempt) {
-        this.getLastRound().guessWord(new Word(attempt));
-        if (this.getLastRound().wordIsGuessed()) {
-            this.addScore(this.getLastRound(), this.getLastRound().getAttempts());
-        }
+        this.score += 5 * (5 - this.getLastRound().getAttempts()) + 5;
     }
 }

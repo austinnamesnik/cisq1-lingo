@@ -7,6 +7,7 @@ import nl.hu.cisq1.lingo.domain.exception.GameDoesNotExistException;
 import nl.hu.cisq1.lingo.presentation.dto.CreationDTO;
 import nl.hu.cisq1.lingo.presentation.dto.GameDTO;
 import nl.hu.cisq1.lingo.presentation.dto.GameMapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +18,7 @@ import javax.transaction.Transactional;
 public class GameService {
     private final SpringGameRepository gameRepository;
 
-    @Autowired
-    private WordService wordService;
-
-    @Autowired
-    private GameMapper gameMapper;
+    private GameMapper gameMapper = Mappers.getMapper(GameMapper.class);
 
     public GameService(SpringGameRepository gameRepository) {
         this.gameRepository = gameRepository;
@@ -38,18 +35,17 @@ public class GameService {
     }
 
     public CreationDTO findByIdCreation(Long id) {
-        return this.gameMapper.toCreationDTO(this.gameRepository.findById(id).orElseThrow(GameDoesNotExistException::new));
+        Game game = this.gameRepository.findById(id).orElseThrow(GameDoesNotExistException::new);
+        return this.gameMapper.toCreationDTO(game);
     }
 
-    public GameDTO startNextRound(Game game) {
-        int letterLength = game.getRounds().size() % 3 + 5;
-        game.startNextRound(new Word(wordService.provideRandomWord(letterLength)));
+    public GameDTO startNextRound(Game game, String word) {
+        game.startNextRound(new Word(word));
         return gameMapper.toGameDTOstart(game);
     }
 
     public GameDTO makeGuess(Game game, String attempt) {
-        game.makeGuess(attempt);
-        this.gameRepository.save(game);
+        game.getLastRound().guessWord(new Word(attempt));
         return this.gameMapper.toGameDTOguess(game);
     }
 }

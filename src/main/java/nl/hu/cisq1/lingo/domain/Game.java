@@ -33,8 +33,10 @@ public class Game implements Serializable {
     }
 
     public void startNextRound(Word word) {
-        if (this.getLastRound() != null && this.getLastRound().getFeedbackList().isEmpty() && this.getLastRound().getFeedbackList() != null) {
-            if (!this.getLastRound().wordIsGuessed()) {
+        if (this.getLastRound() != null) {
+            if (this.getLastRound().getLastFeedback() != null) {
+                throw new RoundNotFinishedException();
+            } else if (!this.getLastRound().wordIsGuessed()) {
                 throw new RoundNotFinishedException();
             }
         } else {

@@ -2,8 +2,6 @@ package nl.hu.cisq1.lingo.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.hu.cisq1.lingo.CiTestConfiguration;
-import nl.hu.cisq1.lingo.data.SpringGameRepository;
-import nl.hu.cisq1.lingo.data.SpringWordRepository;
 import nl.hu.cisq1.lingo.presentation.dto.GuessDTO;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class GameControllerIntegrationTest {
-
-    @Autowired
-    private SpringGameRepository springGameRepository;
-
-    @Autowired
-    private SpringWordRepository springWordRepository;
 
     @Autowired
     private MockMvc mockMvc;

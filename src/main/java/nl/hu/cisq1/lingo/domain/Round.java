@@ -44,7 +44,10 @@ public class Round implements Serializable {
     }
 
     public boolean wordIsGuessed() {
-        return this.feedbackList.get(feedbackList.size()-1).wordIsGuessed();
+        if (!this.feedbackList.isEmpty()) {
+            return this.feedbackList.get(feedbackList.size()-1).wordIsGuessed();
+        }
+        return false;
     }
 
     public boolean guessIsInvalid() {
@@ -69,17 +72,24 @@ public class Round implements Serializable {
             }
         }
 
+        List<Mark> marks;
         if (guess.getLength().equals(this.word.getLength())) {
-            List<Mark> marks = this.generateMarks(guess);
+            marks = this.generateMarks(guess);
             Feedback fb = new Feedback(guess.getValue(), marks);
             this.feedbackList.add(fb);
-            this.attempts++;
         } else {
-            List<Mark> marks = this.generateInvalidMarks(guess);
+            marks = this.generateInvalidMarks(guess);
             Feedback fb = new Feedback(guess.getValue(), marks);
             this.feedbackList.add(fb);
-            this.attempts++;
         }
+        this.attempts++;
+    }
+
+    public Feedback getLastFeedback() {
+        if (!this.feedbackList.isEmpty()) {
+            return this.feedbackList.get(this.feedbackList.size()-1);
+        }
+        return null;
     }
 
     private List<Mark> generateMarks(Word guess) {

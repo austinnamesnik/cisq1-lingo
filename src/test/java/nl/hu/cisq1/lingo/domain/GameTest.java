@@ -1,6 +1,7 @@
 package nl.hu.cisq1.lingo.domain;
 
 import nl.hu.cisq1.lingo.domain.exception.AttemptLimitReachedException;
+import nl.hu.cisq1.lingo.domain.exception.RoundNotFinishedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -56,6 +57,16 @@ class GameTest {
         Game game = new Game();
         game.startNextRound(new Word("word"));
         assertEquals(1, game.getRounds().size());
+    }
+
+    @Test
+    @DisplayName("Throws exception when a new round wants to start when the previous is not finished")
+    void startNextRoundInvalid() {
+        Game game = new Game();
+        game.startNextRound(new Word("word"));
+        assertThrows(RoundNotFinishedException.class, () -> {
+            game.startNextRound(new Word("hello"));
+        });
     }
 
 }

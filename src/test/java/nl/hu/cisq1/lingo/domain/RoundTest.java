@@ -50,21 +50,18 @@ class RoundTest {
     @Test
     @DisplayName("When the guessed word's length is not the same as the word to guess, an exception is thrown")
     void guessWithIncorrectLength() {
-        assertThrows(InvalidFeedbackException.class, this::tester2);
-    }
-
-    void tester2() {
-        Round r = new Round(1, new Word("hidden"));
-        r.guessWord(new Word("hid"));
+        Round r = new Round(1, new Word("woord"));
+        r.guessWord(new Word("wod"));
+        assertEquals(List.of(Mark.INVALID, Mark.INVALID, Mark.INVALID), r.getFeedbackList().get(0).getMarks());
     }
 
     @Test
     @DisplayName("When the game is finished, you can not make another guess")
     void makeGuessWhenFinished() {
-        assertThrows(WordIsGuessedException.class, this::tester3);
+        assertThrows(WordIsGuessedException.class, this::tester2);
     }
 
-    void tester3() {
+    void tester2() {
         Round round = new Round(1, new Word("hallo"));
         round.guessWord(new Word("hallo"));
         round.guessWord(new Word("hoiii"));

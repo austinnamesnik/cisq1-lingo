@@ -75,7 +75,10 @@ public class Round implements Serializable {
             this.feedbackList.add(fb);
             this.attempts++;
         } else {
-            throw new InvalidFeedbackException();
+            List<Mark> marks = this.generateInvalidMarks(guess);
+            Feedback fb = new Feedback(guess.getValue(), marks);
+            this.feedbackList.add(fb);
+            this.attempts++;
         }
     }
 
@@ -110,9 +113,17 @@ public class Round implements Serializable {
                 } else {
                     marks.add(Mark.ABSENT);
                 }
-            } else if (x == 1) {
+            } else {
                 marks.add(Mark.CORRECT);
             }
+        }
+        return marks;
+    }
+
+    private List<Mark> generateInvalidMarks(Word guess) {
+        List<Mark> marks = new ArrayList<>();
+        for (char ignored : guess.getValue().toCharArray()) {
+            marks.add(Mark.INVALID);
         }
         return marks;
     }

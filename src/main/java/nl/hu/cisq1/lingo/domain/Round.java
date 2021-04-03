@@ -132,7 +132,9 @@ public class Round implements Serializable {
 
     private List<Mark> generateInvalidMarks(Word guess) {
         List<Mark> marks = new ArrayList<>();
-        List.of(guess.getValue().toCharArray()).forEach(chars -> marks.add(Mark.INVALID));
+        for (int i = 0; i < guess.getLength(); i++) {
+            marks.add(Mark.INVALID);
+        }
         return marks;
     }
 }

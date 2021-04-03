@@ -2,6 +2,7 @@ package nl.hu.cisq1.lingo.domain;
 
 import nl.hu.cisq1.lingo.domain.exception.AttemptLimitReachedException;
 import nl.hu.cisq1.lingo.domain.exception.RoundNotFinishedException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,19 +11,27 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
+
+    Game game;
+    Word w1;
+    Word w2;
+    Round r1;
+    @BeforeEach
+    void start() {
+        game = new Game();
+    }
 
     @ParameterizedTest(name = "#{index} - Word is {0} and the score is {2} with {1} attempts")
     @DisplayName("Score is added when the round is finished")
     @MethodSource("provideRoundExamples")
     void addScore(String word, int attempts, int score) {
-        Game game = new Game();
-        game.startNextRound(new Word(word));
-        Round round = game.getLastRound();
-        round.setAttempts(attempts);
+        w1 = new Word(word);
+        game.startNextRound(w1);
+        r1 = game.getLastRound();
+        r1.setAttempts(attempts);
         game.addScore();
         assertEquals(score, game.getScore());
     }
@@ -44,28 +53,43 @@ class GameTest {
     }
 
     void tester2() {
-        Game game = new Game();
-        game.startNextRound(new Word("hallo"));
-        Round round = game.getRounds().get(0);
-        round.setAttempts(6);
+        w1 = new Word("hallo");
+        game.startNextRound(w1);
+        r1 = game.getLastRound();
+        r1.setAttempts(6);
         game.addScore();
     }
 
     @Test
     @DisplayName("The next round is start when a word is given")
     void startNextRound() {
-        Game game = new Game();
-        game.startNextRound(new Word("word"));
+        w1 = new Word("word");
+        game.startNextRound(w1);
         assertEquals(1, game.getRounds().size());
     }
 
     @Test
-    @DisplayName("Throws exception when a new round wants to start when the previous is not finished")
-    void startNextRoundInvalid() {
-        Game game = new Game();
-        game.startNextRound(new Word("word"));
+    @DisplayName("Throws exception when a new round wants to start when no guesses have been made")
+    void startNextRoundInvalidNoGuesses() {
+        w1 = new Word("word");
+        game.startNextRound(w1);
         assertThrows(RoundNotFinishedException.class, () -> {
-            game.startNextRound(new Word("hello"));
+            w2 = new Word("hello");
+            game.startNextRound(w2);
+        });
+    }
+
+    @Test
+    @DisplayName("Throws exception when a new round wants to start when the word is not guessed")
+    void startNextRoundInvalidWordNotGuessed() {
+        w1 = new Word("word");
+        w2 = new Word("bird");
+        game.startNextRound(w1);
+        r1 = game.getLastRound();
+        r1.guessWord(w2);
+        assertThrows(RoundNotFinishedException.class, () -> {
+            w1 = new Word("gates");
+            game.startNextRound(w1);
         });
     }
 

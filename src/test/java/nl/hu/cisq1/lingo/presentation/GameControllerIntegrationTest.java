@@ -1,6 +1,7 @@
 package nl.hu.cisq1.lingo.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import nl.hu.cisq1.lingo.CiTestConfiguration;
 import nl.hu.cisq1.lingo.presentation.dto.GuessDTO;
 import org.junit.jupiter.api.*;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,39 +22,44 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Import(CiTestConfiguration.class)
 @AutoConfigureMockMvc
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class GameControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @Order(1)
     @DisplayName("creates a new game")
     void createsANewGame() throws Exception {
-        RequestBuilder request = MockMvcRequestBuilders
+        RequestBuilder request1 = MockMvcRequestBuilders
                 .post("/create")
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(request)
+        mockMvc.perform(request1)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.score", is(0)));
+                .andExpect(jsonPath("$.id", isA(Integer.class)))
+                .andExpect(jsonPath("$.score", is(0))).andReturn().getResponse();
     }
 
     @Test
-    @Order(2)
     @DisplayName("starts the next round of the game")
     void startsNextRound() throws Exception {
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/next/1")
+        RequestBuilder request1 = MockMvcRequestBuilders
+                .post("/create")
                 .contentType(MediaType.APPLICATION_JSON);
 
-        String[] expectedResult = {"p", "_", "_", "_", "_"};
+        MockHttpServletResponse response = mockMvc.perform(request1).andReturn().getResponse();
 
-        mockMvc.perform(request)
+        Integer id = JsonPath.read(response.getContentAsString(), "$.id");
+
+        RequestBuilder request2 = MockMvcRequestBuilders
+                .post("/next/" + id)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        String[] expectedResult = {"w", "_", "_", "_", "_"};
+
+        mockMvc.perform(request2)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.gameId", is(1)))
+                .andExpect(jsonPath("$.gameId", is(id)))
                 .andExpect(jsonPath("$.number", is(1)))
                 .andExpect(jsonPath("$.attempts", is(0)))
                 .andExpect(jsonPath("$.feedbacks", hasSize(0)))
@@ -60,23 +67,36 @@ class GameControllerIntegrationTest {
     }
 
     @Test
-    @Order(3)
     @DisplayName("makes a guess on the last round of the game")
     void guessWord() throws Exception {
         GuessDTO dto = new GuessDTO();
-        dto.setAttempt("puzza");
+        dto.setAttempt("puzzi");
         String requestBody = new ObjectMapper().writeValueAsString(dto);
 
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/guess/1")
+        RequestBuilder request1 = MockMvcRequestBuilders
+                .post("/create")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        MockHttpServletResponse response = mockMvc.perform(request1).andReturn().getResponse();
+
+        Integer id = JsonPath.read(response.getContentAsString(), "$.id");
+
+        RequestBuilder request2 = MockMvcRequestBuilders
+                .post("/next/" + id)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request2);
+
+        RequestBuilder request3 = MockMvcRequestBuilders
+                .post("/guess/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody);
 
-        String[] expectedResult = {"p", "-", "z", "z", "a"};
+        String[] expectedResult = {"-", "-", "-", "-", "-"};
 
-        mockMvc.perform(request)
+        mockMvc.perform(request3)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.gameId", is(1)))
+                .andExpect(jsonPath("$.gameId", is(id)))
                 .andExpect(jsonPath("$.number", is(1)))
                 .andExpect(jsonPath("$.attempts", is(1)))
                 .andExpect(jsonPath("$.feedbacks", hasSize(1)))
@@ -84,16 +104,23 @@ class GameControllerIntegrationTest {
     }
 
     @Test
-    @Order(4)
     @DisplayName("retrieves the game with the requested ID")
     void getsTheGame() throws Exception {
-        RequestBuilder request = MockMvcRequestBuilders
-                .get("/get/1")
+        RequestBuilder request1 = MockMvcRequestBuilders
+                .post("/create")
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(request)
+        MockHttpServletResponse response = mockMvc.perform(request1).andReturn().getResponse();
+
+        Integer id = JsonPath.read(response.getContentAsString(), "$.id");
+
+        RequestBuilder request2 = MockMvcRequestBuilders
+                .get("/get/" + id)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request2)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.id", isA(Integer.class)))
                 .andExpect(jsonPath("$.score", is(0)));
     }
 

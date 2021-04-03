@@ -2,7 +2,6 @@ package nl.hu.cisq1.lingo.domain;
 
 import lombok.*;
 import nl.hu.cisq1.lingo.domain.exception.AttemptLimitReachedException;
-import nl.hu.cisq1.lingo.domain.exception.InvalidFeedbackException;
 import nl.hu.cisq1.lingo.domain.exception.WordIsGuessedException;
 
 import javax.persistence.*;
@@ -51,7 +50,10 @@ public class Round implements Serializable {
     }
 
     public boolean guessIsInvalid() {
-        return this.feedbackList.get(feedbackList.size()-1).guessIsInvalid();
+        if (!this.feedbackList.isEmpty()) {
+            return this.feedbackList.get(feedbackList.size()-1).guessIsInvalid();
+        }
+        return false;
     }
 
     public Hint startRound() {

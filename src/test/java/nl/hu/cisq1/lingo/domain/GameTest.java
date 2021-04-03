@@ -74,10 +74,8 @@ class GameTest {
     void startNextRoundInvalidNoGuesses() {
         w1 = new Word("word");
         game.startNextRound(w1);
-        assertThrows(RoundNotFinishedException.class, () -> {
-            w2 = new Word("hello");
-            game.startNextRound(w2);
-        });
+        w2 = new Word("hello");
+        assertThrows(RoundNotFinishedException.class, () -> game.startNextRound(w2));
     }
 
     @Test
@@ -88,10 +86,8 @@ class GameTest {
         game.startNextRound(w1);
         r1 = game.getLastRound();
         r1.guessWord(w2);
-        assertThrows(RoundNotFinishedException.class, () -> {
-            w1 = new Word("gates");
-            game.startNextRound(w1);
-        });
+        w1 = new Word("gates");
+        assertThrows(RoundNotFinishedException.class, () -> game.startNextRound(w1));
     }
 
 }

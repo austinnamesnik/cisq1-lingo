@@ -15,11 +15,8 @@ public class GameController {
 
     private GameService gameService;
 
-    private WordService wordService;
-
-    public GameController(GameService gameService, WordService wordService) {
+    public GameController(GameService gameService) {
         this.gameService = gameService;
-        this.wordService = wordService;
     }
 
     @PostMapping("/create")

@@ -55,7 +55,7 @@ class GameControllerIntegrationTest {
                 .post("/next/" + id)
                 .contentType(MediaType.APPLICATION_JSON);
 
-        String[] expectedResult = {"w", "_", "_", "_", "_"};
+        String[] expectedResult = {"p", "_", "_", "_", "_"};
 
         mockMvc.perform(request2)
                 .andExpect(status().isOk())
@@ -92,7 +92,7 @@ class GameControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody);
 
-        String[] expectedResult = {"-", "-", "-", "-", "-"};
+        String[] expectedResult = {"p", "-", "z", "z", "+"};
 
         mockMvc.perform(request3)
                 .andExpect(status().isOk())

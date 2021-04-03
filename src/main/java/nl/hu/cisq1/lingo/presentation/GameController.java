@@ -1,7 +1,6 @@
 package nl.hu.cisq1.lingo.presentation;
 
 import nl.hu.cisq1.lingo.application.GameService;
-import nl.hu.cisq1.lingo.application.WordService;
 import nl.hu.cisq1.lingo.domain.Game;
 import nl.hu.cisq1.lingo.presentation.dto.CreationDTO;
 import nl.hu.cisq1.lingo.presentation.dto.GameDTO;

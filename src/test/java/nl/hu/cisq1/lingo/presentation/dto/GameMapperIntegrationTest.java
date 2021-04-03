@@ -1,6 +1,5 @@
 package nl.hu.cisq1.lingo.presentation.dto;
 
-import nl.hu.cisq1.lingo.CiTestConfiguration;
 import nl.hu.cisq1.lingo.domain.Game;
 import nl.hu.cisq1.lingo.domain.Word;
 import org.junit.jupiter.api.BeforeEach;

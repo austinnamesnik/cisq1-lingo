@@ -30,8 +30,7 @@ public class GameController {
     @PostMapping("/next/{id}")
     public GameDTO startNextRound(@PathVariable("id") Long id) {
         Game game = this.gameService.findById(id);
-        int letterLength = game.getRounds().size() % 3 + 5;
-        return this.gameService.startNextRound(game, wordService.provideRandomWord(letterLength));
+        return this.gameService.startNextRound(game);
     }
 
     @PostMapping("/guess/{game_id}")

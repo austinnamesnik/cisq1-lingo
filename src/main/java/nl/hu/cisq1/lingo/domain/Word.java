@@ -1,10 +1,15 @@
 package nl.hu.cisq1.lingo.domain;
 
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+@ToString
+@NoArgsConstructor
 @Entity(name = "words")
 public class Word implements Serializable {
     @Id
@@ -12,7 +17,6 @@ public class Word implements Serializable {
     private String value;
     private Integer length;
 
-    public Word() {}
     public Word(String word) {
         this.value = word;
         this.length = word.length();
@@ -24,10 +28,5 @@ public class Word implements Serializable {
 
     public Integer getLength() {
         return length;
-    }
-
-    @Override
-    public String toString() {
-        return this.getValue();
     }
 }

@@ -17,10 +17,13 @@ import javax.transaction.Transactional;
 public class GameService {
     private final SpringGameRepository gameRepository;
 
+    private final WordService wordService;
+
     private final GameMapper gameMapper = Mappers.getMapper(GameMapper.class);
 
-    public GameService(SpringGameRepository gameRepository) {
+    public GameService(SpringGameRepository gameRepository, WordService wordService) {
         this.gameRepository = gameRepository;
+        this.wordService = wordService;
     }
 
     public CreationDTO createGame() {
@@ -38,8 +41,9 @@ public class GameService {
         return this.gameMapper.toCreationDTO(game);
     }
 
-    public GameDTO startNextRound(Game game, String word) {
-        game.startNextRound(new Word(word));
+    public GameDTO startNextRound(Game game) {
+        int letterLength = game.getRounds().size() % 3 + 5;
+        game.startNextRound(new Word(this.wordService.provideRandomWord(letterLength)));
         return gameMapper.toGameDTOstart(game);
     }
 

@@ -1,9 +1,12 @@
 package nl.hu.cisq1.lingo.application;
 
 import nl.hu.cisq1.lingo.data.SpringGameRepository;
+import nl.hu.cisq1.lingo.data.SpringWordRepository;
 import nl.hu.cisq1.lingo.domain.Game;
+import nl.hu.cisq1.lingo.domain.Word;
 import nl.hu.cisq1.lingo.domain.exception.GameDoesNotExistException;
 import nl.hu.cisq1.lingo.presentation.dto.GameDTO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,21 +17,35 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class GameServiceTest {
 
+    WordService wordService;
+    @BeforeEach
+    void start() {
+        SpringWordRepository mockWordRepo = mock(SpringWordRepository.class);
+        when(mockWordRepo.findRandomWordByLength(5))
+                .thenReturn(Optional.of(new Word("pizza")));
+        when(mockWordRepo.findRandomWordByLength(6))
+                .thenReturn(Optional.of(new Word("oranje")));
+        when(mockWordRepo.findRandomWordByLength(7))
+                .thenReturn(Optional.of(new Word("wanorde")));
+
+        wordService = new WordService(mockWordRepo);
+    }
+
     @ParameterizedTest
     @DisplayName("finds a game by any ID and returns it")
     @MethodSource("provideGameAndID")
     void findByID(Game game, Long id) {
-        SpringGameRepository mock = mock(SpringGameRepository.class);
-        when(mock.findById(id))
+        SpringGameRepository mockGameRepo = mock(SpringGameRepository.class);
+        when(mockGameRepo.findById(id))
                 .thenReturn(Optional.of(new Game(id)));
 
-        GameService gs = new GameService(mock);
+        GameService gs = new GameService(mockGameRepo, wordService);
         String result = gs.findById(id).toString();
 
         assertEquals(game.toString(), result);
@@ -48,7 +65,7 @@ class GameServiceTest {
         SpringGameRepository mockRepo = mock(SpringGameRepository.class);
         when(mockRepo.findById(anyLong())).thenReturn(Optional.empty());
 
-        GameService gs = new GameService(mockRepo);
+        GameService gs = new GameService(mockRepo, wordService);
 
         assertThrows(GameDoesNotExistException.class, () -> gs.findById(0L));
     }
@@ -56,27 +73,26 @@ class GameServiceTest {
     @ParameterizedTest
     @DisplayName("starts the next round of the game")
     @MethodSource("provideWords")
-    void startNextRound(String word, String attempt, Game game) {
+    void startNextRound(Game game) {
         SpringGameRepository sprGmeRepo = mock(SpringGameRepository.class);
 
-        GameService gs = new GameService(sprGmeRepo);
+        GameService gs = new GameService(sprGmeRepo, wordService);
 
-        GameDTO dto = gs.startNextRound(game, word);
+        GameDTO dto = gs.startNextRound(game);
 
         assertEquals(dto.getGameId(), game.getId());
-        assertEquals(word, game.getLastRound().getWord().getValue());
         assertEquals(1, game.getRounds().size());
     }
 
     @ParameterizedTest
     @DisplayName("guesses a word in the last round of the game")
     @MethodSource("provideWords")
-    void guessWord(String word, String attempt, Game game) {
+    void guessWord(Game game, String attempt) {
         SpringGameRepository sprGmeRepo = mock(SpringGameRepository.class);
 
-        GameService gs = new GameService(sprGmeRepo);
+        GameService gs = new GameService(sprGmeRepo, wordService);
 
-        gs.startNextRound(game, word);
+        gs.startNextRound(game);
         GameDTO dto = gs.makeGuess(game, attempt);
 
         assertEquals(1, dto.getAttempts());
@@ -86,9 +102,9 @@ class GameServiceTest {
 
     static Stream<Arguments> provideWords() {
         return Stream.of(
-                Arguments.of("hallo", "hollo", new Game(1L)),
-                Arguments.of("austin", "auston", new Game(2L)),
-                Arguments.of("swimcup", "swimcup", new Game(3L))
+                Arguments.of(new Game(1L), "hollo"),
+                Arguments.of(new Game(2L), "auston"),
+                Arguments.of(new Game(3L), "swimcup")
         );
     }
 }

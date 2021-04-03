@@ -8,14 +8,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ContextConfiguration(classes = CiTestConfiguration.class)
-public class GameMapperIntegrationTest {
+@ContextConfiguration(classes = GameMapperIntegrationTest.SpringTestConfig.class)
+class GameMapperIntegrationTest {
+
+    @Configuration
+    @ComponentScan(basePackageClasses = GameMapperIntegrationTest.class)
+    static class SpringTestConfig {}
 
     @Autowired
     GameMapper mapper = Mappers.getMapper(GameMapper.class);
@@ -34,7 +40,7 @@ public class GameMapperIntegrationTest {
 
     @Test
     @DisplayName("Should inject GameMapper with function 'toGameDTOstart'")
-    public void toGameDTOstart() {
+    void toGameDTOstart() {
         g1.startNextRound(w1);
         GameDTO dto = mapper.toGameDTOstart(g1);
         assertNotNull(dto);
@@ -47,14 +53,14 @@ public class GameMapperIntegrationTest {
 
     @Test
     @DisplayName("Should return null if Game-object is null too")
-    public void toGameDTOstartNull() {
+    void toGameDTOstartNull() {
         GameDTO dto = mapper.toGameDTOstart(g2);
         assertNull(dto);
     }
 
     @Test
     @DisplayName("Should inject GameMapper with function 'toGameDTOguess'")
-    public void toGameDTOguess() {
+    void toGameDTOguess() {
         g1.startNextRound(w1);
         g1.getLastRound().guessWord(w2);
         GameDTO dto = mapper.toGameDTOguess(g1);
@@ -68,14 +74,14 @@ public class GameMapperIntegrationTest {
 
     @Test
     @DisplayName("Should return null if Game-object is null too")
-    public void toGameDTOguessNull() {
+    void toGameDTOguessNull() {
         GameDTO dto = mapper.toGameDTOguess(g2);
         assertNull(dto);
     }
 
     @Test
     @DisplayName("Should inject GameMapper with function 'toCreationDTO'")
-    public void toCreationDTO() {
+    void toCreationDTO() {
         CreationDTO dto = mapper.toCreationDTO(g1);
         assertNotNull(dto);
         assertEquals(1L, dto.getId());
@@ -84,7 +90,7 @@ public class GameMapperIntegrationTest {
 
     @Test
     @DisplayName("Should return null if Game-object is null too")
-    public void toCreationDTOnull() {
+    void toCreationDTOnull() {
         CreationDTO dto = mapper.toCreationDTO(g2);
         assertNull(dto);
     }

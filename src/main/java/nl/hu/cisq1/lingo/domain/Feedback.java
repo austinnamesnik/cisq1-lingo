@@ -1,6 +1,7 @@
 package nl.hu.cisq1.lingo.domain;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.minidev.json.annotate.JsonIgnore;
 import nl.hu.cisq1.lingo.domain.exception.InvalidFeedbackException;
 

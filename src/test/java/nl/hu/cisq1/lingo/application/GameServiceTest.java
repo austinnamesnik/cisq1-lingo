@@ -87,7 +87,7 @@ class GameServiceTest {
     @ParameterizedTest
     @DisplayName("guesses a word in the last round of the game")
     @MethodSource("provideWords")
-    void guessWord(Game game, String attempt) {
+    void guessWord(Game game, String attempt, int score) {
         SpringGameRepository sprGmeRepo = mock(SpringGameRepository.class);
 
         GameService gs = new GameService(sprGmeRepo, wordService);
@@ -98,13 +98,15 @@ class GameServiceTest {
         assertEquals(1, dto.getAttempts());
         assertNotNull(dto.getFeedbacks());
         assertEquals(1, dto.getFeedbacks().size());
+        assertEquals(score, game.getScore());
     }
 
     static Stream<Arguments> provideWords() {
         return Stream.of(
-                Arguments.of(new Game(1L), "hollo"),
-                Arguments.of(new Game(2L), "auston"),
-                Arguments.of(new Game(3L), "swimcup")
+                Arguments.of(new Game(1L), "hollo", 0),
+                Arguments.of(new Game(2L), "auston", 0),
+                Arguments.of(new Game(3L), "swimcup", 0),
+                Arguments.of(new Game(4L), "pizza", 25)
         );
     }
 }

@@ -15,6 +15,7 @@ public class GameDTO {
     private Long gameId;
     private int number;
     private int attempts;
+    private boolean wordGuessed;
     private List<Feedback> feedbacks;
     private List<Character> hint;
 }

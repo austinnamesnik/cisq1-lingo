@@ -35,12 +35,11 @@ public class Game implements Serializable {
             if ((this.getLastRound().getLastFeedback() == null) || (!this.getLastRound().wordIsGuessed())) {
                 throw new RoundNotFinishedException();
             }
-        } else {
-            int roundNumber = this.rounds.size() + 1;
-            Round round = new Round(roundNumber, word);
-            round.startRound();
-            this.rounds.add(round);
         }
+        int roundNumber = this.rounds.size() + 1;
+        Round round = new Round(roundNumber, word);
+        round.startRound();
+        this.rounds.add(round);
     }
 
     public Round getLastRound() {

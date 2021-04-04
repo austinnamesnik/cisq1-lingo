@@ -49,6 +49,9 @@ public class GameService {
 
     public GameDTO makeGuess(Game game, String attempt) {
         game.getLastRound().guessWord(new Word(attempt));
+        if (game.getLastRound().wordIsGuessed()) {
+            game.addScore();
+        }
         return this.gameMapper.toGameDTOguess(game);
     }
 }

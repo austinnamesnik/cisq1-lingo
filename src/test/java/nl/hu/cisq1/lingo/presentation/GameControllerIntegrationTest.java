@@ -1,9 +1,8 @@
 package nl.hu.cisq1.lingo.presentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
 import nl.hu.cisq1.lingo.CiTestConfiguration;
-import nl.hu.cisq1.lingo.domain.Feedback;
 import nl.hu.cisq1.lingo.presentation.dto.GuessDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -73,7 +72,7 @@ class GameControllerIntegrationTest {
     void guessWord() throws Exception {
         GuessDTO dto = new GuessDTO();
         dto.setAttempt("puzzi");
-        String requestBody = new ObjectMapper().writeValueAsString(dto);
+        String requestBody = new Gson().toJson(dto);
 
         RequestBuilder request1 = MockMvcRequestBuilders
                 .post("/create")

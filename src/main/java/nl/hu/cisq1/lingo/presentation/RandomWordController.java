@@ -20,10 +20,6 @@ public class RandomWordController {
 
     @GetMapping("random")
     public String getRandomWord(@RequestParam Integer length) {
-        try {
-            return this.service.provideRandomWord(length);
-        } catch (WordLengthNotSupportedException exception) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
-        }
+        return this.service.provideRandomWord(length);
     }
 }

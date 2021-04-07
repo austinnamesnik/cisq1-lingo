@@ -47,7 +47,6 @@ class GameMapperIntegrationTest {
         assertEquals(0, dto.getAttempts());
         assertEquals(1, dto.getNumber());
         assertEquals(List.of('s', '_', '_', '_', '_'), dto.getHint());
-        assertEquals(0, dto.getFeedbacks().size());
     }
 
     @Test
@@ -68,7 +67,6 @@ class GameMapperIntegrationTest {
         assertEquals(1, dto.getAttempts());
         assertEquals(1, dto.getNumber());
         assertEquals(List.of('s', '-', 'a', '-', '-'), dto.getHint());
-        assertEquals(1, dto.getFeedbacks().size());
     }
 
     @Test

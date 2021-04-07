@@ -1,6 +1,7 @@
 package nl.hu.cisq1.lingo.domain;
 
 import nl.hu.cisq1.lingo.domain.exception.AttemptLimitReachedException;
+import nl.hu.cisq1.lingo.domain.exception.GameFinishedException;
 import nl.hu.cisq1.lingo.domain.exception.RoundNotFinishedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -88,6 +89,19 @@ class GameTest {
         r1.guessWord(w2);
         w1 = new Word("gates");
         assertThrows(RoundNotFinishedException.class, () -> game.startNextRound(w1));
+    }
+
+    @Test
+    @DisplayName("Throws exception when a new round wants to start when the word is not guessed and the attempt limit is reached")
+    void startNextRoundInvalidWordNotGuessedAndLimitReached() {
+        w1 = new Word("worden");
+        w2 = new Word("werden");
+        game.startNextRound(w1);
+        r1 = game.getLastRound();
+        r1.guessWord(w2);
+        r1.setAttempts(5);
+        w1 = new Word("wanorde");
+        assertThrows(GameFinishedException.class, () -> game.startNextRound(w1));
     }
 
 }

@@ -3,6 +3,7 @@ package nl.hu.cisq1.lingo.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import nl.hu.cisq1.lingo.CiTestConfiguration;
+import nl.hu.cisq1.lingo.domain.Feedback;
 import nl.hu.cisq1.lingo.presentation.dto.GuessDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,7 +64,7 @@ class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.gameId", is(id)))
                 .andExpect(jsonPath("$.number", is(1)))
                 .andExpect(jsonPath("$.attempts", is(0)))
-                .andExpect(jsonPath("$.feedbacks", hasSize(0)))
+                .andExpect(jsonPath("$.feedback", nullValue()))
                 .andExpect(jsonPath("$.hint", containsInRelativeOrder(expectedResult)));
     }
 
@@ -100,7 +101,7 @@ class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.gameId", is(id)))
                 .andExpect(jsonPath("$.number", is(1)))
                 .andExpect(jsonPath("$.attempts", is(1)))
-                .andExpect(jsonPath("$.feedbacks", hasSize(1)))
+                .andExpect(jsonPath("$.feedback.marks", hasSize(5)))
                 .andExpect(jsonPath("$.hint", containsInRelativeOrder(expectedResult)));
     }
 

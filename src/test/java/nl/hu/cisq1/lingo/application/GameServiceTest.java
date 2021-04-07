@@ -2,6 +2,7 @@ package nl.hu.cisq1.lingo.application;
 
 import nl.hu.cisq1.lingo.data.SpringGameRepository;
 import nl.hu.cisq1.lingo.data.SpringWordRepository;
+import nl.hu.cisq1.lingo.domain.Feedback;
 import nl.hu.cisq1.lingo.domain.Game;
 import nl.hu.cisq1.lingo.domain.Word;
 import nl.hu.cisq1.lingo.domain.exception.GameDoesNotExistException;
@@ -96,8 +97,7 @@ class GameServiceTest {
         GameDTO dto = gs.makeGuess(game, attempt);
 
         assertEquals(1, dto.getAttempts());
-        assertNotNull(dto.getFeedbacks());
-        assertEquals(1, dto.getFeedbacks().size());
+        assertNotNull(dto.getFeedback());
         assertEquals(score, game.getScore());
     }
 

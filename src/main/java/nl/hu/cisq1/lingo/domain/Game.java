@@ -3,6 +3,7 @@ package nl.hu.cisq1.lingo.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import nl.hu.cisq1.lingo.domain.exception.AttemptLimitReachedException;
+import nl.hu.cisq1.lingo.domain.exception.GameFinishedException;
 import nl.hu.cisq1.lingo.domain.exception.RoundNotFinishedException;
 
 import javax.persistence.*;
@@ -31,8 +32,12 @@ public class Game implements Serializable {
     }
 
     public void startNextRound(Word word) {
-        if (this.getLastRound() != null && ((this.getLastRound().getLastFeedback() == null) || (!this.getLastRound().wordIsGuessed()))) {
-            throw new RoundNotFinishedException();
+        if (this.getLastRound() != null && this.getLastRound().getAttempts() < 5) {
+            if ((this.getLastRound().getLastFeedback() == null) || (!this.getLastRound().wordIsGuessed())) {
+                throw new RoundNotFinishedException();
+            }
+        } else if (this.getLastRound() != null && this.getLastRound().getAttempts() == 5 && !this.getLastRound().wordIsGuessed()) {
+            throw new GameFinishedException();
         }
         int roundNumber = this.rounds.size() + 1;
         Round round = new Round(roundNumber, word);

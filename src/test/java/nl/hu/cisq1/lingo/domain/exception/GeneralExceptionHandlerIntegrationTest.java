@@ -132,7 +132,12 @@ class GeneralExceptionHandlerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request1);
-        mockMvc.perform(request1)
+
+        RequestBuilder request2 = MockMvcRequestBuilders
+                .post("/next/" + game.getId())
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request2)
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.type", is(RoundNotFinishedException.class.getSimpleName())))
                 .andExpect(jsonPath("$.message", is("Round is not finished. Please continue guessing.")));
@@ -157,7 +162,13 @@ class GeneralExceptionHandlerIntegrationTest {
                 .content(json);
 
         mockMvc.perform(request2);
-        mockMvc.perform(request2)
+
+        RequestBuilder request3 = MockMvcRequestBuilders
+                .post("/guess/" + game.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mockMvc.perform(request3)
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.type", is(WordIsGuessedException.class.getSimpleName())))
                 .andExpect(jsonPath("$.message", is("The word is guessed correctly, you can't make another guess")));

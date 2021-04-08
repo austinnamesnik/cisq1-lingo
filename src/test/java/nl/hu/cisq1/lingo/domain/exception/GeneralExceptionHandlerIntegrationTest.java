@@ -80,20 +80,16 @@ class GeneralExceptionHandlerIntegrationTest {
         dto.setAttempt("puzzi");
         String json = new Gson().toJson(dto);
 
-        for (int i = 0; i < 6; i++) {
-            RequestBuilder request2 = MockMvcRequestBuilders
-                    .post("/guess/" + game.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(json);
-
-            mockMvc.perform(request2);
-        }
-
-        RequestBuilder request3 = MockMvcRequestBuilders
+        RequestBuilder request2 = MockMvcRequestBuilders
                 .post("/guess/" + game.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
-        mockMvc.perform(request3)
+
+        for (int i = 0; i < 6; i++) {
+            mockMvc.perform(request2);
+        }
+
+        mockMvc.perform(request2)
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.type", is(AttemptLimitReachedException.class.getSimpleName())))
                 .andExpect(jsonPath("$.message", is("The attempt limit was reached, you may not make another guess")));
@@ -112,12 +108,12 @@ class GeneralExceptionHandlerIntegrationTest {
         dto.setAttempt("puzzi");
         String json = new Gson().toJson(dto);
 
-        for (int i = 0; i < 6; i++) {
-            RequestBuilder request2 = MockMvcRequestBuilders
-                    .post("/guess/" + game.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(json);
+        RequestBuilder request2 = MockMvcRequestBuilders
+                .post("/guess/" + game.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
 
+        for (int i = 0; i < 6; i++) {
             mockMvc.perform(request2);
         }
 
